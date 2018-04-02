@@ -1,0 +1,24 @@
+{% extends "layout/home.html" %}
+
+{% block content %}
+    <form class="form-signin" method="post" action="{{ url_for('signup.login') }}">
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+        </div>
+
+        <div class="form-label-group input-divider">
+            <input class="form-control" placeholder="Username" required="" autofocus="" type="text" name="username">
+        </div>
+        <div class="form-label-group">
+            <input class="form-control" placeholder="Password" required="" type="password" name="password">
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input value="remember-me" type="checkbox"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a class="btn btn-lg btn-secondary btn-block" href="{{ url_for('signup.register_form') }}">Register</a>
+    </form>
+{% endblock %}

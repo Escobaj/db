@@ -1,0 +1,161 @@
+{% extends "layout/home.html" %}
+
+{% block content %}
+    <h1><b>Films</b></h1>
+
+    <h3><i class="fa fa-sm fa-trophy"></i> Top rated movies<span class="float-right">
+        <a href="" class="btn btn-secondary">See all</a></span>
+    </h3>
+
+    <hr>
+    <div class="row display-poster">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <a href="{{ url_for('movie.show', id=23) }}">
+                    <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                </a>
+                <div class="centered">5.7</div>
+            </div>
+            <p><a href="#">Harry Potter et les reliques de la mort partie 2</a></p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BYTU3ZjUxM2MtZWQ5OS00NDQxLTlhZDMtYzY3OTE4ZDY0NWM1XkEyXkFqcGdeQXVyMTc2NDg4MTU@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Alpha Go</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMTcxODgwMDkxNV5BMl5BanBnXkFtZTYwMDk2MDg3._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et la chambre des secrets</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+    </div>
+
+    <br>
+    <h3><i class="fa fa-sm fa-comments"></i> Most commented movies<span class="float-right"><a href=""
+                                                                                               class="btn btn-secondary">See all</a></span>
+    </h3>
+
+    <hr>
+    <div class="row display-poster">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BYTU3ZjUxM2MtZWQ5OS00NDQxLTlhZDMtYzY3OTE4ZDY0NWM1XkEyXkFqcGdeQXVyMTc2NDg4MTU@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Alpha Go</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMTcxODgwMDkxNV5BMl5BanBnXkFtZTYwMDk2MDg3._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et la chambre des secrets</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+    </div>
+
+    <br>
+    <h3><i class="fa fa-sm fa-bookmark"></i> Most interested movies<span class="float-right"><a href=""
+                                                                                                class="btn btn-secondary">See all</a></span>
+    </h3>
+    <hr>
+    <div class="row display-poster">
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BYTU3ZjUxM2MtZWQ5OS00NDQxLTlhZDMtYzY3OTE4ZDY0NWM1XkEyXkFqcGdeQXVyMTc2NDg4MTU@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Alpha Go</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMTcxODgwMDkxNV5BMl5BanBnXkFtZTYwMDk2MDg3._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et la chambre des secrets</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="image-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMjIyZGU4YzUtNDkzYi00ZDRhLTljYzctYTMxMDQ4M2E0Y2YxXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg">
+                <div class="centered">5.7</div>
+            </div>
+            <p>Harry Potter et les reliques de la mort partie 2</p>
+        </div>
+    </div>
+
+
+
+{% endblock %}
