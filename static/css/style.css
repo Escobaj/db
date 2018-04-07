@@ -74,10 +74,15 @@
     transform: translateY(-50%);
 }
 
-.poste{
+.poste {
     font-size: 20px;
 }
 
-.portrait{
+.portrait {
     height: 100%;
+}
+
+img {
+    height: 250px !important;
+    object-fit: cover;
 }

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-request": "^1.2.0",
     "faker": "^4.1.0",
     "google-images": "^2.1.0",
     "mysql2": "^1.5.3",

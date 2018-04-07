@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, flash
 import app.models.signup as user_model
+from pymysql import MySQLError
 
-import json
 
 signup = Blueprint('signup', __name__, )
 
@@ -17,6 +17,7 @@ def login():
 
 @signup.route('/login', methods=['POST'])
 def connect():
+	user_exist = 0
 	if 'username' in session:
 		flash(u'you are already logged in', 'info')
 		return redirect(request.referrer or '/')
@@ -56,6 +57,14 @@ def register_form():
 def register():
 	if (request.form['username'].strip() != '' or request.form['password'].strip() != '' or request.form[
 		'first_name'].strip() != '' or request.form['last_name'].strip() != '' or request.form['email'].strip() != ''):
-		return render_template('signup/register.html')
+		
+		try:
+			user_model.create_user(request.form['username'], request.form['password'],
+			                       request.form['first_name'], request.form['last_name'], request.form['email'])
+			flash(u'User have been created', 'error')
+			return redirect(url_for('signup.login'))
+		except MySQLError:
+			flash(u'Username or Email is already used', 'error')
+			return render_template('signup/register.html')
 	else:
 		return render_template('signup/register.html')

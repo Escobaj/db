@@ -12,5 +12,17 @@ def user_exist(username, password):
 	
 	finally:
 		conn.close()
+	
+	return result
 
+
+def create_user(username, password, first_name, last_name, email):
+	conn = _database.connection()
+	
+	with conn.cursor() as cursor:
+		sql = "INSERT INTO users (username, email, first_name, last_name, password) VALUE (%s, %s, %s, %s, MD5(%s));"
+		cursor.execute(sql, (username, email, first_name, last_name, password))
+		result = cursor.fetchone()
+		conn.close()
+	
 	return result

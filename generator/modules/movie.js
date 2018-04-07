@@ -1,30 +1,87 @@
-let request = require('request');
+let request = require('async-request');
+let {addActor, addGenre, addCountry, getAsyncConnection} = require('./utilitary')
 
-function add_movie(connection) {
-    request('http://www.omdbapi.com/?s=' + process.argv[3] + '&page=&apikey=9194a1a8', (error, response, body) => {
-        let tab = JSON.parse(body);
-        tab.Search.forEach(async (elems, i) => {
-            if (elems.Type === 'movie') {
-                request('http://www.omdbapi.com/?apikey=9194a1a8&i=' + elems.imdbID, (error, response, body) => {
-                    body = JSON.parse(body);
-                    connection.query(
-                        'INSERT INTO movies (name, release_year, duration, description, awards, picture,' +
-                        ' production, box_office, website, rated) ' +
-                        '   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                        [body.Title, (body.Released === 'N/A') ? undefined : parseInt(body.Released, 10),
-                            (body.Released === 'N/A') ? undefined : parseInt(body.Released, 10),
-                            body.Plot, body.Awards, body.Poster, body.Production,
-                            parseInt(body.BoxOffice.replace('$', '').split(',').join(''), 10) || 0,
-                            body.Website, body.Rated],
-                        function (err) {
-                            console.log(err);
-                        }
-                    );
+async function add_movie() {
+
+    let connection = await getAsyncConnection();
+
+    try {
+        let response = await request('http://www.omdbapi.com/?s=' + process.argv[3] + '&page=&apikey=9194a1a8')
+        let tab = JSON.parse(response.body).Search;
+        for (let i = 0; i < tab.length; i += 1) {
+
+            if (tab[i].Type === 'movie') {
+
+                response = await request('http://www.omdbapi.com/?apikey=9194a1a8&i=' + tab[i].imdbID)
+                let body = JSON.parse(response.body);
+                try {
+                    let [rows] = await connection.execute(
+                            'INSERT INTO movies (name, release_year, duration, description, awards, picture,' +
+                            ' production, box_office, website, rated) ' +
+                            '   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            [body.Title, (body.Year === 'N/A') ? null : parseInt(body.Year, 10),
+                                (body.Runtime === 'N/A') ? null : parseInt(body.Runtime, 10),
+                                (body.Plot === 'N/A') ? null : body.Plot,
+                                (body.Awards === 'N/A') ? null : body.Awards,
+                                (body.Poster === 'N/A') ? null : body.Poster,
+                                (body.Production === 'N/A') ? null : body.Production,
+                                parseInt(body.BoxOffice.replace('$', '').split(',').join(''), 10) || 0,
+                                (body.Website === 'N/A') ? null : body.Website,
+                                (body.Rated === 'N/A') ? null : body.Rated]);
+
+                    let actorList = body.Actors.split(',')
+                    for (let i = 0; i < actorList.length; i += 1) {
+                        let r = await connection.execute(
+                            'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
+                            'SELECT ?, ?, id ' +
+                            'FROM roles ' +
+                            'WHERE name = ?',
+                            [rows.insertId, await addActor(actorList[i].trim()), 'actor']);
+                    }
+
+                    let directorList = body.Director.split(',')
+                    for (let i = 0; i < directorList.length; i += 1) {
+                       let r = await connection.execute(
+                        'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
+                        'SELECT ?, ?, id ' +
+                        'FROM roles ' +
+                        'WHERE name = ?',
+                        [rows.insertId, await addActor(directorList[i].trim()), 'director']);
+                    }
+
+                    let writerList = body.Writer.split(',')
+                    for (let i = 0; i < writerList.length; i += 1) {
+                       let r = await connection.execute(
+                        'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
+                        'SELECT ?, ?, id ' +
+                        'FROM roles ' +
+                        'WHERE name = ?',
+                        [rows.insertId, await addActor(writerList[i].trim()), 'writer']);
+                    }
+
+                    let genreList = body.Genre.split(',')
+                    for (let i = 0; i < genreList.length; i += 1) {
+                        let r = await connection.execute(
+                            'INSERT INTO genre_movie (movies_id, genres_id) VALUES (?, ?)',
+                            [rows.insertId, await addGenre(genreList[i].trim())]);
+                    }
+
+                    let countryList = body.Country.split(',')
+                    for (let i = 0; i < countryList.length; i += 1) {
+                        let r = await connection.execute(
+                            'INSERT INTO country_movie (movies_id, countries_id) VALUES (?, ?)',
+                            [rows.insertId, await addCountry(countryList[i].trim())]);
+                    }
+                } catch (e) {
+                    console.log(e)
                 }
-            )
             }
-        })
-    });
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await connection.close();
+    }
 }
 
 module.exports = {
