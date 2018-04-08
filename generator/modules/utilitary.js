@@ -1,4 +1,3 @@
-let gimage = require('google-images');
 const mysql = require('mysql2/promise');
 
 

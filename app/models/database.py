@@ -6,7 +6,8 @@ def connection():
 	                       user='root',
 	                       password='1234',
 	                       db='db',
-	                       cursorclass=pymysql.cursors.DictCursor)
+	                       cursorclass=pymysql.cursors.DictCursor,
+	                       autocommit=True)
 
 
 def deconnection(conn):

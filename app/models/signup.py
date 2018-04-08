@@ -6,9 +6,9 @@ def user_exist(username, password):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT COUNT(*) AS count FROM users WHERE username = %s AND password = MD5(%s)"
+			sql = "SELECT COUNT(*) AS count, id FROM users WHERE username = %s AND password = MD5(%s)"
 			cursor.execute(sql, (username, password))
-			result = cursor.fetchone()[0]
+			result = cursor.fetchone()
 	
 	finally:
 		conn.close()
