@@ -86,3 +86,8 @@ img {
     height: 250px !important;
     object-fit: cover;
 }
+
+.description{
+    font-weight: normal !important ;
+    text-align: left !important;
+}

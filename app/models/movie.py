@@ -7,18 +7,18 @@ def get_top_rated_movies(nombre, page=0):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, ROUND(AVG(rate), 1) AS moyenne, picture \
+			sql = "SELECT id, name, ROUND(AVG(rate), 1) AS moyenne, picture, release_year, description \
 					  FROM evaluate_movie \
 					    JOIN movies m ON evaluate_movie.movies_id = m.id \
 					      GROUP BY id \
 					        ORDER BY moyenne DESC \
 					          LIMIT %s, %s;"
-			cursor.execute(sql, (page * nombre, nombre))
+			cursor.execute(sql, (int(page) * int(nombre), int(nombre)))
 			result = cursor.fetchall()
-	except:
+	except Exception as e:
 		result = ()
 		flash('The database is unavailable', 'error')
-	
+		flash(e, 'error')
 	finally:
 		conn.close()
 	
@@ -77,7 +77,7 @@ def show_movie(id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT *, avg(rate) as moyenne \
+			sql = "SELECT *, avg(rate) AS moyenne \
 					  FROM movies \
 					    JOIN evaluate_movie em ON movies.id = em.movies_id \
 					      WHERE id = %s \
@@ -193,11 +193,11 @@ def get_user_review(id, user_id):
 		conn.close()
 	
 	return result
-	
+
 
 def rate_movie(id, user_id, rate):
 	conn = _database.connection()
-
+	
 	try:
 		with conn.cursor() as cursor:
 			sql = " INSERT INTO evaluate_movie (`users_id`, `movies_id`, `comment`, `rate`) VALUE (%s, %s, NULL, %s) \
@@ -210,5 +210,96 @@ def rate_movie(id, user_id, rate):
 	finally:
 		cursor.close()
 		conn.close()
+	
+	return result
+
+
+def comment_movie(id, user_id, comment):
+	conn = _database.connection()
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "INSERT INTO evaluate_movie (`users_id`, `movies_id`, `comment`, `rate`) VALUE (%s, %s, %s, NULL) \
+			       ON DUPLICATE KEY UPDATE `comment` = %s;"
+			
+			cursor.execute(sql, (user_id, id, comment, comment))
+			cursor.fetchone()
+			result = True
+			cursor.close()
+	
+	except Exception as e:
+		result = False
+	finally:
+		conn.close()
+	
+	return result
+
+
+def get_user_wishlist(movie_id, user_id):
+	conn = _database.connection()
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT COUNT(*) as total \
+  						FROM wish_list_movies \
+    						WHERE users_id = %s AND movies_id = %s;"
+			cursor.execute(sql, (user_id, movie_id))
+			row = cursor.fetchone()
+			if row['total'] == 1:
+				result = True
+			else:
+				result = False
+			cursor.close()
+	
+	except Exception as e:
+		result = False
+	finally:
+		conn.close()
+	
+	return result
+
+
+def wishlist_movie(movie_id, user_id):
+	conn = _database.connection()
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "INSERT INTO wish_list_movies (users_id, movies_id) VALUES (%s, %s)"
+			cursor.execute(sql, (user_id, movie_id))
+			cursor.close()
+			flash('This movie have been added to your wishlist', 'success')
+	
+	except Exception as e:
+		try:
+			with conn.cursor() as cursor:
+				sql = "DELETE FROM wish_list_movies WHERE users_id = %s AND movies_id = %s;"
+				cursor.execute(sql, (user_id, movie_id))
+				cursor.close()
+				flash('This movie have been removed from your wishlist', 'success')
+		except Exception:
+			flash('The database is unavailable', 'error')
+			
+	finally:
+		conn.close()
+
+
+def get_total_movie_number():
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT COUNT(*) as total FROM movies"
+			cursor.execute(sql)
+			result = cursor.fetchone()['total']
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+		flash(e, 'error')
 		
+	
+	finally:
+		conn.close()
+
 	return result

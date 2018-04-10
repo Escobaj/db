@@ -9,24 +9,58 @@ def index():
 	return render_template('movie/index.html',
 	                       top_rated=movie_model.get_top_rated_movies(6),
 	                       most_commented=movie_model.get_most_commented_movies(6),
-	                       most_interested=movie_model.get_most_interested_movies(6), )
+	                       most_interested=movie_model.get_most_interested_movies(6))
 
 
-@movie.route('/<id>', methods=['GET'])
-def show(id):
-	item = movie_model.show_movie(id)
+@movie.route('/<identifiant>', methods=['GET'])
+def show(identifiant):
+	item = movie_model.show_movie(identifiant)
 	if item is None:
 		return redirect(request.referrer or '/')
 	return render_template('movie/show.html',
 	                       item=item,
-	                       countries=movie_model.get_countries(id),
-	                       casting=movie_model.get_casting(id),
-	                       user_review=movie_model.get_user_review(id, session['id']),
-	                       reviews=movie_model.get_reviews(id),
-	                       genres=movie_model.get_genres(id))
+	                       countries=movie_model.get_countries(identifiant),
+	                       casting=movie_model.get_casting(identifiant),
+	                       user_review=movie_model.get_user_review(identifiant, session['id']) if 'id' in session else (),
+	                       reviews=movie_model.get_reviews(identifiant),
+	                       genres=movie_model.get_genres(identifiant),
+	                       wishlist=movie_model.get_user_wishlist(identifiant, session['id']))
 
 
 @movie.route('/<id>/review', methods=['POST'])
 def review(id):
 	test = movie_model.rate_movie(id, session['id'], request.form['rate'])
 	return jsonify(test)
+
+
+@movie.route('/<id>/comment', methods=['POST'])
+def comment(id):
+	if session['id'] is None or request.form['review'] is None:
+		abort(400)
+	if movie_model.comment_movie(id, session['id'], request.form['review']) is True:
+		flash('Your comment have been added', 'success')
+	else:
+		flash('The database is unavailable', 'error')
+	return redirect(request.referrer or '/')
+
+
+@movie.route('/<id>/wishlist', methods=['GET'])
+def wishlist(id):
+	print(id)
+	if session['id'] is None is None:
+		abort(400)
+	movie_model.wishlist_movie(id, session['id'])
+	return redirect(request.referrer or '/')
+
+
+@movie.route('/top_rate', methods=['GET'], defaults={'page': 0})
+@movie.route('/top_rate/<page>', methods=['GET'])
+def best_rate(page):
+	tab = []
+	for i in range(0, round(movie_model.get_total_movie_number() / 20)):
+		tab.append(i)
+	
+	return render_template('movie/top_rate.html',
+	                       top_rated=movie_model.get_top_rated_movies(20, page),
+	                       tab=tab,
+	                       page=page)

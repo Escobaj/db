@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="row display-poster">
         <div class="col-lg-2">
             <div class="image-container">
@@ -18,13 +17,15 @@
         <div class="col-lg-5 cn">
             <div class="inner">
                 <h2>{{ item.name }} ({{ item.release_year }})</h2>
-                <span class="my-rating-9"></span>
-                <div class="button-set">
-                    <a href="#" class="btn btn-outline-secondary text-success" title="add to interest"><i
-                            class="fas fa-bookmark"></i> Wishlist</a>
-                    <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
-                       title="comment"><i class="fas fa-comments"></i> Review</a>
-                </div>
+                {% if session['id'] %}
+                    <span class="rating"></span>
+                    <div class="button-set">
+                        <a href="{{ url_for('movie.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
+                                class="fas fa-bookmark"></i> Wishlist</a>
+                        <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
+                           title="comment"><i class="fas fa-comments"></i> Review</a>
+                    </div>
+                {% endif %}
             </div>
 
         </div>
@@ -160,17 +161,16 @@
                     <dd>
                         {{ review.comment }}
                     </dd>
-                </dl>S
+                </dl>
             {% endif %}
         {% endfor %}
     {% endif %}
 
-    <div class="modal fade" id="review" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action="/movie/review" class="modal-content">
+            <form action="/movie/{{ item.id }}/comment" class="modal-content" method="post">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Review</h5>
+                    <h5 class="modal-title">Review</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -178,12 +178,12 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Review:</label>
-                        <textarea class="form-control" rows="3" name="review">{{ user_review.comment }}</textarea>
+                        <textarea class="form-control" rows="3" name="review">{% if user_review.comment %}{{ user_review.comment }}{% endif %}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Valider</button>
+                    <input type="submit" class="btn btn-primary" value="Valider">
                 </div>
             </form>
         </div>
@@ -193,8 +193,8 @@
 {% block js_local %}
 
     <script>
-        $(".my-rating-9").starRating({
-            initialRating: {{ user_review.rate if user_review else 0 }},
+        $(".rating").starRating({
+            initialRating: {{ user_review.rate if user_review.rate else 0 }},
             totalStars: {{ 5*2 }},
             disableAfterRate: false,
             starSize: 30,
@@ -204,7 +204,11 @@
                     rate: currentRating
                 }, (data, status) => {
                     console.log(data);
-                    console.log(status);
+                    if (data === true) {
+                        toastr['success']('Your rate have been saved');
+                    } else {
+                        toastr['error']('The database is unavailable');
+                    }
                 });
             }
         });

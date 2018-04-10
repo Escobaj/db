@@ -4,7 +4,7 @@
     <h1><b>Films</b></h1>
 
     <h3><i class="fa fa-sm fa-trophy"></i> Top rated movies<span class="float-right">
-        <a href="" class="btn btn-secondary">See all</a></span>
+        <a href="{{ url_for('movie.best_rate') }}" class="btn btn-secondary">See all</a></span>
     </h3>
 
     <hr>
@@ -13,12 +13,12 @@
         {% for item in top_rated %}
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="image-container">
-                    <a href="{{ url_for('movie.show', id=item.id) }}">
+                    <a href="{{ url_for('movie.show', identifiant=item.id) }}">
                         <img src="{{ item.picture }}">
                     </a>
                     <div class="centered">{{ item.moyenne }}</div>
                 </div>
-                <p><a href="{{ url_for('movie.show', id=item.id) }}">{{ item.name }}</a></p>
+                <p><a href="{{ url_for('movie.show', identifiant=item.id) }}">{{ item.name }}</a></p>
             </div>
         {% endfor %}
 
@@ -35,12 +35,12 @@
         {% for item in most_commented %}
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="image-container">
-                    <a href="{{ url_for('movie.show', id=item.id) }}">
+                    <a href="{{ url_for('movie.show', identifiant=item.id) }}">
                         <img src="{{ item.picture }}">
                     </a>
                     <div class="centered">{{ item.moyenne }}</div>
                 </div>
-                <p><a href="{{ url_for('movie.show', id=item.id) }}">{{ item.name }}</a></p>
+                <p><a href="{{ url_for('movie.show', identifiant=item.id) }}">{{ item.name }}</a></p>
             </div>
         {% endfor %}
 
@@ -55,12 +55,12 @@
         {% for item in most_interested %}
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="image-container">
-                    <a href="{{ url_for('movie.show', id=item.id) }}">
+                    <a href="{{ url_for('movie.show', identifiant=item.id) }}">
                         <img src="{{ item.picture }}">
                     </a>
                     <div class="centered">{{ item.moyenne }}</div>
                 </div>
-                <p><a href="{{ url_for('movie.show', id=item.id) }}">{{ item.name }}</a></p>
+                <p><a href="{{ url_for('movie.show', identifiant=item.id) }}">{{ item.name }}</a></p>
             </div>
         {% endfor %}
     </div>
