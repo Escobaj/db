@@ -2,8 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, abort,
 import app.models.signup as user_model
 from pymysql import MySQLError
 
-
-signup = Blueprint('signup', __name__, )
+signup = Blueprint('signup', __name__)
 
 
 @signup.route('/login', methods=['GET'])

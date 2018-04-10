@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, flash, jsonify
 import app.models.movie as movie_model
 
-movie = Blueprint('movie', __name__, )
+movie = Blueprint('movie', __name__)
 
 
 @movie.route('/', methods=['GET'])

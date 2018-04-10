@@ -91,3 +91,33 @@ img {
     font-weight: normal !important ;
     text-align: left !important;
 }
+
+.search{
+    display: none;
+    height: auto;
+    position: absolute;
+}
+
+.search-item{
+    position: relative;
+    height: 150px;
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.62);
+    border-radius: 2px;
+    z-index: 100 !important;
+}
+
+.search-item img{
+    height: 150px !important;
+}
+
+.search-item p{
+    line-height: 150px;
+    font-size: 18px;
+    color: black;
+}
+
+.search-item a{
+    text-decoration: none;
+}
