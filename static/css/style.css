@@ -83,7 +83,6 @@
 }
 
 img {
-    height: 250px !important;
     object-fit: cover;
 }
 
@@ -120,4 +119,14 @@ img {
 
 .search-item a{
     text-decoration: none;
+}
+
+.username {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.fullname {
+    font-size: 35px;
+    margin-top: -25px;
 }

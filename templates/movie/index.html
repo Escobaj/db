@@ -9,7 +9,6 @@
 
     <hr>
     <div class="row display-poster">
-
         {% for item in top_rated %}
             <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="image-container">
@@ -21,12 +20,11 @@
                 <p><a href="{{ url_for('movie.show', identifiant=item.id) }}">{{ item.name }}</a></p>
             </div>
         {% endfor %}
-
     </div>
 
     <br>
-    <h3><i class="fa fa-sm fa-comments"></i> Most commented movies<span class="float-right"><a href=""
-                                                                                               class="btn btn-secondary">See all</a></span>
+    <h3><i class="fa fa-sm fa-comments"></i> Most commented movies<span class="float-right">
+        <a href="{{ url_for('movie.most_commented') }}" class="btn btn-secondary">See all</a></span>
     </h3>
 
     <hr>
@@ -47,8 +45,8 @@
     </div>
 
     <br>
-    <h3><i class="fa fa-sm fa-bookmark"></i> Most interested movies<span class="float-right"><a href=""
-                                                                                                class="btn btn-secondary">See all</a></span>
+    <h3><i class="fa fa-sm fa-bookmark"></i> Most interested movies<span class="float-right">
+        <a href="{{ url_for('movie.most_wishlisted') }}" class="btn btn-secondary">See all</a></span>
     </h3>
     <hr>
     <div class="row display-poster">

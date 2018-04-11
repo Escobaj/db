@@ -30,7 +30,7 @@ def get_most_commented_movies(nombre, page=0):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, picture \
+			sql = "SELECT id, name, picture, release_year, description \
 					  FROM evaluate_movie \
 					    JOIN movies m ON evaluate_movie.movies_id = m.id \
 					      WHERE comment IS NOT NULL \
@@ -41,6 +41,7 @@ def get_most_commented_movies(nombre, page=0):
 			result = cursor.fetchall()
 	except Exception as e:
 		result = ()
+		flash(e, 'error')
 		flash('The database is unavailable', 'error')
 	
 	finally:
@@ -54,7 +55,7 @@ def get_most_interested_movies(nombre, page=0):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, picture, COUNT(*) AS nombre \
+			sql = "SELECT id, name, picture, COUNT(*) AS nombre, release_year, description \
 					  FROM movies \
 					    JOIN wish_list_movies wlm ON movies.id = wlm.movies_id \
 					      GROUP BY id \
@@ -240,7 +241,7 @@ def get_user_wishlist(movie_id, user_id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT COUNT(*) as total \
+			sql = "SELECT COUNT(*) AS total \
   						FROM wish_list_movies \
     						WHERE users_id = %s AND movies_id = %s;"
 			cursor.execute(sql, (user_id, movie_id))
@@ -278,7 +279,7 @@ def wishlist_movie(movie_id, user_id):
 				flash('This movie have been removed from your wishlist', 'success')
 		except Exception:
 			flash('The database is unavailable', 'error')
-			
+	
 	finally:
 		conn.close()
 
@@ -289,7 +290,7 @@ def get_total_movie_number():
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT COUNT(*) as total FROM movies"
+			sql = "SELECT COUNT(*) AS total FROM movies"
 			cursor.execute(sql)
 			result = cursor.fetchone()['total']
 			cursor.close()
@@ -297,9 +298,33 @@ def get_total_movie_number():
 	except Exception as e:
 		flash('The database is unavailable', 'error')
 		flash(e, 'error')
-		
 	
 	finally:
 		conn.close()
+	
+	return result
 
+
+def get_all_rates(id):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT id, name, rate, picture, release_year, 'movie' as type FROM evaluate_movie \
+					JOIN movies m ON evaluate_movie.movies_id = m.id WHERE users_id = %s AND rate IS NOT NULL \
+				   UNION SELECT id, name, rate, picture, release_year, 'game' as type FROM evaluate_game \
+				    JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND rate IS NOT NULL \
+				   UNION SELECT id, name, rate, picture, `release`, 'serie' as type FROM evaluate_serie \
+				    JOIN series m ON evaluate_serie.series_id = m.id WHERE users_id = %s AND rate IS NOT NULL"
+			cursor.execute(sql, (id, id, id))
+			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
 	return result

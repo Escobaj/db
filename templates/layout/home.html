@@ -42,9 +42,8 @@
                    aria-haspopup="true" aria-expanded="false">
                     {{ session['username'] }}
                 </a>
-
                 <div class="dropdown-menu" aria-labelledby="profilDropdown">
-                    <a class="dropdown-item" href="#">Profile</a>
+                    <a class="dropdown-item" href="{{ url_for('signup.profil', id=session['id'] if 'id' in session else 0) }}">Profile</a>
                     <a class="dropdown-item" href="{{ url_for('signup.logout') }}">Disconnected</a>
                 </div>
             </div>

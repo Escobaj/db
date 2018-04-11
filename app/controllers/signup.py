@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, flash
 import app.models.signup as user_model
+import app.models.movie as movie_model
 from pymysql import MySQLError
 
 signup = Blueprint('signup', __name__)
@@ -47,6 +48,19 @@ def logout():
 	session.pop('id')
 	flash(u'You are now disconnected.', 'info')
 	return redirect(request.referrer or '/')
+
+
+@signup.route('/profil/<int:id>', methods=['GET'])
+def profil(id):
+	
+	if 'id' in session and session['id'] == id:
+		own = 1
+	else:
+		own = 0
+	return render_template('signup/profil.html',
+	                       user=user_model.get_user(id),
+	                       rates=movie_model.get_all_rates(id),
+	                       own=own)
 
 
 @signup.route('/register', methods=['GET'])

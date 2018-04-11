@@ -1,3 +1,4 @@
+from flask import abort
 import app.models.database as _database
 
 
@@ -25,4 +26,19 @@ def create_user(username, password, first_name, last_name, email):
 		result = cursor.fetchone()
 		conn.close()
 	
+	return result
+
+
+def get_user(id):
+	conn = _database.connection()
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT * FROM users WHERE id = %s"
+			cursor.execute(sql, (id))
+			result = cursor.fetchone()
+			conn.close()
+	except:
+		abort(404)
+		
 	return result
