@@ -1,0 +1,82 @@
+{% extends 'layout/home.html' %}
+
+{% block content %}
+
+    <br>
+    <p class="username">{{ user.username | title }}</p>
+    <p class="fullname">{{ user.first_name | title }} {{ user.last_name | title }}</p>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for("signup.profil", id=id) }}">Rates</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for("signup.comment", id=id) }}">Comments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for("signup.wishlist", id=id) }}">Wishlist</a>
+        </li>
+    </ul>
+
+    <br>
+    {% for comment in comments %}
+        <div class="row display-poster">
+            <div class="col-lg-2 col-md-2">
+                <div class="image-container">
+                    <img src="{{ comment.picture }}">
+                </div>
+            </div>
+            <div class="col-lg-10 col-md-10">
+                <div class="inner">
+                    <h2>{{ comment.name }} ({{ comment.release_year }})</h2>
+                    <p class="comment" id="{{ comment.id }}" type="{{ comment.type }}">"{{ comment.comment }}"</p>
+                    {% if 'id' in session and id == session['id'] %}
+                        <a href="#" class="btn btn-secondary edit"><i class="fa fa-pencil-alt"></i></a>
+                        <a href="{{ url_for('%s.delete_comment' % comment.type, id=comment.id) }}" class="btn btn-danger delete"><i class="fa fa-times"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div><hr>
+    {% endfor %}
+
+    <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form action="/movie/comment" class="modal-content" method="post" id="form-review">
+                <div class="modal-header">
+                    <h5 class="modal-title">Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Review:</label>
+                        <textarea class="form-control" rows="3" name="review" id="form-value"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Valider">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_local %}
+
+    <script>
+        $(".edit").on('click', (e) => {
+            let data = e.currentTarget.offsetParent.children[1].firstChild.data
+            let id = e.currentTarget.offsetParent.children[1].id
+            let type = e.currentTarget.offsetParent.children[1].attributes.type.value
+
+            $('#form-review').attr('action', `/${type}/${id}/comment`);
+            $('#form-value').html(data.replace('"', '').replace('"', ''))
+            $("#review").modal('toggle')
+        })
+
+    </script>
+
+{% endblock %}

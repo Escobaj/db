@@ -5,31 +5,36 @@
     <br>
     <p class="username">{{ user.username | title }}</p>
     <p class="fullname">{{ user.first_name | title }} {{ user.last_name | title }}</p>
-    <hr>
-    <ul class="nav nav-tabs nav-fill">
+
+    <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Rates</a>
+            <a class="nav-link active" href="{{ url_for("signup.profil", id=id) }}">Rates</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Comments</a>
+            <a class="nav-link" href="{{ url_for("signup.comment", id=id) }}">Comments</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Wishlist</a>
+            <a class="nav-link" href="{{ url_for("signup.wishlist", id=id) }}">Wishlist</a>
         </li>
     </ul>
 
     <br>
     {% for rate in rates %}
         <div class="row display-poster">
-            <div class="col-lg-2 col-md-2 col-sm-2">
+            <div class="col-lg-2 col-md-2">
                 <div class="image-container">
                     <img src="{{ rate.picture }}">
                 </div>
             </div>
-            <div class="col-lg-10 col-md-10 col-sm-10">
+            <div class="col-lg-10 col-md-10">
                 <div class="inner">
                     <h2>{{ rate.name }} ({{ rate.release_year }})</h2>
                     <span class="rating" id="rate_{{ loop.index }}"></span>
+                    {% if 'id' in session and id == session['id'] %}
+                        <div>
+                            <a href="{{ url_for('%s.delete_rate' % rate.type, id=rate.id) }}" class="btn btn-danger delete"><i class="fa fa-times"></i></a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div><hr>

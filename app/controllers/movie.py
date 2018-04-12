@@ -44,9 +44,25 @@ def comment(id):
 	return redirect(request.referrer or '/')
 
 
+@movie.route('/<id>/delete_comment', methods=['GET'])
+def delete_comment(id):
+	print(id)
+	if session['id'] is None:
+		abort(403)
+	movie_model.delete_comment(id, session['id'])
+	return redirect(request.referrer or '/')
+
+
+@movie.route('/<id>/delete_rate', methods=['GET'])
+def delete_rate(id):
+	if session['id'] is None:
+		abort(403)
+	movie_model.delete_rate(id, session['id'])
+	return redirect(request.referrer or '/')
+
+
 @movie.route('/<id>/wishlist', methods=['GET'])
 def wishlist(id):
-	print(id)
 	if session['id'] is None is None:
 		abort(400)
 	movie_model.wishlist_movie(id, session['id'])

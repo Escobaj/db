@@ -161,7 +161,7 @@ def get_reviews(id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT username, comment \
+			sql = "SELECT u.id as id, username, comment \
 					  FROM evaluate_movie \
 					    JOIN movies m ON evaluate_movie.movies_id = m.id \
 					    JOIN users u ON evaluate_movie.users_id = u.id \
@@ -328,3 +328,94 @@ def get_all_rates(id):
 		conn.close()
 	
 	return result
+
+
+def get_all_comment(id):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT id, name, comment, picture, release_year, 'movie' as type FROM evaluate_movie \
+					JOIN movies m ON evaluate_movie.movies_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != '' \
+				   UNION SELECT id, name, comment, picture, release_year, 'game' as type FROM evaluate_game \
+				    JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != '' \
+				   UNION SELECT id, name, comment, picture, `release`, 'serie' as type FROM evaluate_serie \
+				    JOIN series m ON evaluate_serie.series_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != ''"
+			cursor.execute(sql, (id, id, id))
+			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
+	return result
+
+
+def get_all_wishlisted(id):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT id, name, release_year, 'movie' as type, picture FROM wish_list_movies \
+					JOIN movies m ON wish_list_movies.movies_id = m.id WHERE users_id = %s \
+				   UNION SELECT id, name, `release`, 'serie' as type, picture FROM wish_list_series \
+				   JOIN series s ON wish_list_series.series_id = s.id WHERE users_id = %s \
+				   UNION SELECT id, name, release_year, 'game' as type, picture FROM wish_list_games \
+				   JOIN games g ON wish_list_games.games_id = g.id WHERE users_id = %s;"
+			cursor.execute(sql, (id, id, id))
+			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
+	return result
+
+
+def delete_comment(movie_id, user_id):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "UPDATE evaluate_movie SET comment = NULL WHERE movies_id = %s AND users_id = %s;"
+			cursor.execute(sql, (movie_id, user_id))
+			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
+	return result
+
+
+def delete_rate(movie_id, user_id):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "UPDATE evaluate_movie SET rate = NULL WHERE movies_id = %s AND users_id = %s;"
+			cursor.execute(sql, (movie_id, user_id))
+			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
+	return result
+

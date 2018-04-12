@@ -6,7 +6,7 @@ def search(query='', limit=3):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT * FROM elements_search WHERE name LIKE %s ORDER BY RAND() LIMIT %s;"
+			sql = "SELECT * FROM elements_search WHERE name LIKE %s LIMIT %s;"
 			cursor.execute(sql, ('%' + query + '%', limit))
 			result = cursor.fetchall()
 	

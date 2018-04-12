@@ -22,7 +22,8 @@
 }
 
 .display-poster img{
-    max-width: 100%;
+    width: 100%;
+    height: 200px;
 }
 
 .display-poster p{
@@ -122,11 +123,17 @@ img {
 }
 
 .username {
-    font-size: 50px;
+    font-size: 40px;
     font-weight: bold;
 }
 
 .fullname {
-    font-size: 35px;
+    font-size: 25px;
     margin-top: -25px;
+}
+
+.comment{
+    font-weight: normal !important;
+    text-align: left !important;
+    color: dimgrey;
 }

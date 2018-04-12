@@ -60,7 +60,34 @@ def profil(id):
 	return render_template('signup/profil.html',
 	                       user=user_model.get_user(id),
 	                       rates=movie_model.get_all_rates(id),
-	                       own=own)
+	                       own=own,
+	                       id=id)
+
+
+@signup.route('/profil/<int:id>/comment', methods=['GET'])
+def comment(id):
+	if 'id' in session and session['id'] == id:
+		own = 1
+	else:
+		own = 0
+	return render_template('signup/profil_comment.html',
+	                       user=user_model.get_user(id),
+	                       comments=movie_model.get_all_comment(id),
+	                       own=own,
+	                       id=id)
+
+
+@signup.route('/profil/<int:id>/wishlist', methods=['GET'])
+def wishlist(id):
+	if 'id' in session and session['id'] == id:
+		own = 1
+	else:
+		own = 0
+	return render_template('signup/profil_wishlist.html',
+	                       user=user_model.get_user(id),
+	                       rates=movie_model.get_all_wishlisted(id),
+	                       own=own,
+	                       id=id)
 
 
 @signup.route('/register', methods=['GET'])

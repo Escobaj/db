@@ -157,7 +157,7 @@
         {% for review in reviews %}
             {% if review.comment %}
                 <dl>
-                    <dt>{{ review.username }}</dt>
+                    <dt><a href="{{ url_for('signup.profil', id=review.id) }}">{{ review.username }}</a></dt>
                     <dd>
                         {{ review.comment }}
                     </dd>
