@@ -115,9 +115,8 @@
                     <dt>Country</dt>
                     <dd>
                         {% for country in countries %}
-                            <a href="">{{ country.name }}</a>
+                            {{ country.name }}
                         {% endfor %}
-
                     </dd>
                 </dl>
             </div>
@@ -128,7 +127,7 @@
                     <dt>Genre</dt>
                     <dd>
                         {% for genre in genres %}
-                            <a href="">{{ genre.name }}</a>
+                            {{ genre.name }}
                         {% endfor %}
                     </dd>
                 </dl>
@@ -140,14 +139,16 @@
         <hr>
         <div class="row display-poster">
             {% for character in casting %}
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <div class="image-container">
-                        <img class="portrait"
-                             src="{{ character.picture }}">
-                        <div class="bottomed poste">{{ character.role }}</div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <a href="{{ url_for('character.show', identifiant=character.id) }}">
+                        <div class="image-container">
+                            <img class="portrait"
+                                 src="{{ character.picture }}">
+                            <div class="bottomed poste">{{ character.role }}</div>
+                        </div>
+                        <p>{{ character.fullname }}</p>
+                        </a>
                     </div>
-                    <p>{{ character.fullname }}</p>
-                </div>
             {% endfor %}
         </div>
     {% endif %}
