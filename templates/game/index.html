@@ -1,0 +1,68 @@
+{% extends "layout/home.html" %}
+
+{% block content %}
+    <h1><b>Films</b></h1>
+
+    <h3><i class="fa fa-sm fa-trophy"></i> Top rated games<span class="float-right">
+        <a href="{{ url_for('game.best_rate') }}" class="btn btn-secondary">See all</a></span>
+    </h3>
+
+    <hr>
+    <div class="row display-poster">
+        {% for item in top_rated %}
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="image-container">
+                    <a href="{{ url_for('game.show', identifiant=item.id) }}">
+                        <img src="{{ item.picture }}">
+                    </a>
+                    <div class="centered">{{ item.moyenne }}</div>
+                </div>
+                <p><a href="{{ url_for('game.show', identifiant=item.id) }}">{{ item.name }}</a></p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <h3><i class="fa fa-sm fa-comments"></i> Most commented games<span class="float-right">
+        <a href="{{ url_for('game.most_commented') }}" class="btn btn-secondary">See all</a></span>
+    </h3>
+
+    <hr>
+    <div class="row display-poster">
+
+        {% for item in most_commented %}
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="image-container">
+                    <a href="{{ url_for('game.show', identifiant=item.id) }}">
+                        <img src="{{ item.picture }}">
+                    </a>
+                    <div class="centered">{{ item.moyenne }}</div>
+                </div>
+                <p><a href="{{ url_for('game.show', identifiant=item.id) }}">{{ item.name }}</a></p>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <br>
+    <h3><i class="fa fa-sm fa-bookmark"></i> Most interested games<span class="float-right">
+        <a href="{{ url_for('game.most_wishlisted') }}" class="btn btn-secondary">See all</a></span>
+    </h3>
+    <hr>
+    <div class="row display-poster">
+        {% for item in most_interested %}
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="image-container">
+                    <a href="{{ url_for('game.show', identifiant=item.id) }}">
+                        <img src="{{ item.picture }}">
+                    </a>
+                    <div class="centered">{{ item.moyenne }}</div>
+                </div>
+                <p><a href="{{ url_for('game.show', identifiant=item.id) }}">{{ item.name }}</a></p>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

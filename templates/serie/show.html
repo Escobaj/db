@@ -18,11 +18,12 @@
         </div>
         <div class="col-lg-5 cn">
             <div class="inner">
-                <h2>{{ item.name }} ({{ item.release_year }})</h2>
+                <h2>{{ item.name }} ({{ item.release }}{% if item.end %} - {{ item.end }}{% endif %})
+                </h2>
                 {% if session['id'] %}
                     <span class="rating"></span>
                     <div class="button-set">
-                        <a href="{{ url_for('movie.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
+                        <a href="{{ url_for('serie.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
                                 class="fas fa-bookmark"></i> Wishlist</a>
                         <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
                            title="comment"><i class="fas fa-comments"></i> Review</a>
@@ -81,16 +82,6 @@
                 </dl>
             </div>
         {% endif %}
-        {% if item.box_office %}
-            <div class="col-lg-6">
-                <dl>
-                    <dt>Box office</dt>
-                    <dd>
-                        {{ '{:,}'.format(item.box_office).replace(',', ' ') }}$
-                    </dd>
-                </dl>
-            </div>
-        {% endif %}
         {% if item.website %}
             <div class="col-lg-6">
                 <dl>
@@ -101,12 +92,12 @@
                 </dl>
             </div>
         {% endif %}
-        {% if item.rated %}
+        {% if item.nb_saison %}
             <div class="col-lg-6">
                 <dl>
-                    <dt>Rated</dt>
+                    <dt>number of seasons</dt>
                     <dd>
-                        {{ item.rated }}
+                        {{ item.nb_saison }}
                     </dd>
                 </dl>
             </div>
@@ -176,7 +167,7 @@
 
     <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action="/movie/{{ item.id }}/comment" class="modal-content" method="post">
+            <form action="/serie/{{ item.id }}/comment" class="modal-content" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title">Review</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -208,7 +199,7 @@
             starSize: 30,
             useFullStars: true,
             callback: (currentRating, $el) => {
-                $.post("/movie/{{ item.id }}/review", {
+                $.post("/serie/{{ item.id }}/review", {
                     rate: currentRating
                 }, (data, status) => {
                     console.log(data);
@@ -223,4 +214,3 @@
     </script>
 
 {% endblock %}
-

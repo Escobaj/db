@@ -1,0 +1,66 @@
+{% extends "layout/home.html" %}
+
+{% block content %}
+
+    <br>
+    <h3><i class="fa fa-sm fa-trophy"></i> Top rated series</h3>
+    <hr>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                <a class="page-link"
+                   href="{{ url_for('serie.best_rate', page=(page | int - 1 if page | int - 1 >= 0 else 0)) }}"
+                   tabindex="-1">Previous</a>
+            </li>
+            {% for index in tab %}
+                <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                               href="{{ url_for('serie.best_rate', page=index) }}">{{ index + 1 }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                <a class="page-link"
+                   href="{{ url_for('serie.best_rate', page=(page | int + 1 if (page | int + 1) in tab else page)) }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+    {% for item in top_rated %}
+        <div class="row display-poster">
+            <div class="col-lg-2">
+                <div class="image-container">
+                    <a href="{{ url_for('serie.show', identifiant=item.id) }}">
+                        <img src="{{ item.picture }}">
+                    </a>
+                    <div class="centered">{{ item.moyenne | round(1) }}</div>
+                </div>
+            </div>
+            <div class="col-lg-10 cn">
+                <div class="inner">
+                    <h2><a href="{{ url_for('serie.show', identifiant=item.id) }}">{{ item.name }} ({{ item.release_year }})</a></h2>
+                    <p class="description">{{ item.description }}</p>
+                </div>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                <a class="page-link"
+                   href="{{ url_for('serie.best_rate', page=(page | int - 1 if page | int - 1 >= 0 else 0)) }}"
+                   tabindex="-1">Previous</a>
+            </li>
+            {% for index in tab %}
+                <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                               href="{{ url_for('serie.best_rate', page=index) }}">{{ index + 1 }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                <a class="page-link"
+                   href="{{ url_for('serie.best_rate', page=(page | int + 1 if (page | int + 1) in tab else page)) }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}

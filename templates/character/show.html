@@ -4,8 +4,13 @@
     <br>
     <div class="row display-poster">
         <div class="col-lg-2">
-            <div class="image-container">
-                <img src="{{ character.picture }}">
+            <div>
+            {% if character.picture %}
+                <img src="{{ character.picture }}" class="show-picture">
+            {% else %}
+                <img class="portrait"
+                     src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg">
+            {% endif %}
             </div>
         </div>
         <div class="col-lg-5 cn">
@@ -25,7 +30,7 @@
         <div class="col-lg-2 col-md-4 col-sm-6">
             <div class="image-container">
                 <a href="{{ url_for('%s.show' % item.type, identifiant=item.id) }}">
-                    <img src="{{ item.picture }}">
+                    <img src="{{ item.picture }}" class="show-picture">
                 </a>
             </div>
             <p><a href="{{ url_for('%s.show' % item.type, identifiant=item.id) }}">{{ item.name }}</a></p>

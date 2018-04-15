@@ -5,14 +5,13 @@ search_input.on('change paste keyup', (e) => {
     $.get("/search/" + search_input.val(), (data, status) => {
         search_overlay.html('')
         for (let i = 0; i < data.length; i += 1) {
-
             search_overlay.append(`
                 <div class="search-item">
                     <a class="row" href="/${data[i].type}/${data[i].id}">
-                        <div class="col-lg-3">
-                            <img src="${data[i].picture}" alt="">
+                        <div class="col-lg-4">
+                            <img src="${data[i].picture || 'https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg'}" class="search-picture">
                         </div>
-                        <div class="col-lg-9">
+                        <div class="col-lg-8">
                             <p>
                                 ${data[i].name}
                             </p>

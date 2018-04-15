@@ -22,7 +22,7 @@
                 {% if session['id'] %}
                     <span class="rating"></span>
                     <div class="button-set">
-                        <a href="{{ url_for('movie.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
+                        <a href="{{ url_for('game.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
                                 class="fas fa-bookmark"></i> Wishlist</a>
                         <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
                            title="comment"><i class="fas fa-comments"></i> Review</a>
@@ -136,29 +136,6 @@
             </div>
         {% endif %}
     </div>
-    {% if casting %}
-        <h3><i class="fa fa-sm fa-users"></i> Casting</h3>
-        <hr>
-        <div class="row display-poster">
-            {% for character in casting %}
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <a href="{{ url_for('character.show', identifiant=character.id) }}">
-                        <div class="image-container">
-                            {% if character.picture %}
-                                <img class="portrait"
-                                     src="{{ character.picture }}">
-                            {% else %}
-                                <img class="portrait"
-                                     src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg">
-                            {% endif %}
-                            <div class="bottomed poste">{{ character.role }}</div>
-                        </div>
-                        <p>{{ character.fullname }}</p>
-                        </a>
-                    </div>
-            {% endfor %}
-        </div>
-    {% endif %}
     {% if reviews %}
         <h3><i class="fas fa-comments"></i> Review</h3>
         <hr>
@@ -176,7 +153,7 @@
 
     <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action="/movie/{{ item.id }}/comment" class="modal-content" method="post">
+            <form action="/game/{{ item.id }}/comment" class="modal-content" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title">Review</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -208,7 +185,7 @@
             starSize: 30,
             useFullStars: true,
             callback: (currentRating, $el) => {
-                $.post("/movie/{{ item.id }}/review", {
+                $.post("/game/{{ item.id }}/review", {
                     rate: currentRating
                 }, (data, status) => {
                     console.log(data);

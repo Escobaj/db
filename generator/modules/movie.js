@@ -1,6 +1,7 @@
 let request = require('async-request');
 let {addActor, addGenre, addCountry, getAsyncConnection} = require('./utilitary')
 let gimage = require('google-images');
+var Search = require('bing.search');
 
 async function add_movie() {
 
@@ -17,18 +18,19 @@ async function add_movie() {
                 let body = JSON.parse(response.body);
                 try {
                     let [rows] = await connection.execute(
-                            'INSERT INTO movies (name, release_year, duration, description, awards, picture,' +
-                            ' production, box_office, website, rated) ' +
-                            '   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                            [body.Title, (body.Year === 'N/A') ? null : parseInt(body.Year, 10),
-                                (body.Runtime === 'N/A') ? null : parseInt(body.Runtime, 10),
-                                (body.Plot === 'N/A') ? null : body.Plot,
-                                (body.Awards === 'N/A') ? null : body.Awards,
-                                (body.Poster === 'N/A') ? null : body.Poster,
-                                (body.Production === 'N/A') ? null : body.Production,
-                                parseInt(body.BoxOffice.replace('$', '').split(',').join(''), 10) || 0,
-                                (body.Website === 'N/A') ? null : body.Website,
-                                (body.Rated === 'N/A') ? null : body.Rated]);
+                        'INSERT INTO movies (name, release_year, duration, description, awards, picture,' +
+                        ' production, box_office, website, rated) ' +
+                        '   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                        [body.Title, (body.Year === 'N/A') ? null : parseInt(body.Year, 10),
+                            (body.Runtime === 'N/A') ? null : parseInt(body.Runtime, 10),
+                            (body.Plot === 'N/A') ? null : body.Plot,
+                            (body.Awards === 'N/A') ? null : body.Awards,
+                            (body.Poster === 'N/A') ? null : body.Poster,
+                            (body.Production === 'N/A') ? null : body.Production,
+                            parseInt(body.BoxOffice.replace('$', '').split(',').join(''), 10) || 0,
+                            (body.Website === 'N/A') ? null : body.Website,
+                            (body.Rated === 'N/A') ? null : body.Rated]
+                    );
 
                     let actorList = body.Actors.split(',')
                     for (let i = 0; i < actorList.length; i += 1) {
@@ -42,22 +44,22 @@ async function add_movie() {
 
                     let directorList = body.Director.split(',')
                     for (let i = 0; i < directorList.length; i += 1) {
-                       let r = await connection.execute(
-                        'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
-                        'SELECT ?, ?, id ' +
-                        'FROM roles ' +
-                        'WHERE name = ?',
-                        [rows.insertId, await addActor(directorList[i].trim()), 'director']);
+                        let r = await connection.execute(
+                            'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
+                            'SELECT ?, ?, id ' +
+                            'FROM roles ' +
+                            'WHERE name = ?',
+                            [rows.insertId, await addActor(directorList[i].trim()), 'director']);
                     }
 
                     let writerList = body.Writer.split(',')
                     for (let i = 0; i < writerList.length; i += 1) {
-                       let r = await connection.execute(
-                        'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
-                        'SELECT ?, ?, id ' +
-                        'FROM roles ' +
-                        'WHERE name = ?',
-                        [rows.insertId, await addActor(writerList[i].trim()), 'writer']);
+                        let r = await connection.execute(
+                            'INSERT INTO character_movie (movies_id, characters_id, roles_id) ' +
+                            'SELECT ?, ?, id ' +
+                            'FROM roles ' +
+                            'WHERE name = ?',
+                            [rows.insertId, await addActor(writerList[i].trim()), 'writer']);
                     }
 
                     let genreList = body.Genre.split(',')
@@ -92,7 +94,8 @@ async function picture() {
     let r = await connection.execute(
                             'SELECT *' +
                             '  FROM characters' +
-                            '    WHERE picture IS NULL or picture = \'\'');
+                            '    WHERE picture IS NULL or picture = \'\'' +
+                            '       ORDER BY RAND()');
 
     for (let i = 0; i < r[0].length; i += 1) {
         const client = new gimage('004286675445984025592:ypgpkv9fjd4', 'AIzaSyCzb6SI_JRrp6xLLYV617Ary6n59h36ros');
@@ -103,6 +106,7 @@ async function picture() {
         } catch (e) {
             console.log(e);
         }
+        let url = null;
         images.some((elem) => {
             if (elem.height > elem.width) {
                 url = elem.url;

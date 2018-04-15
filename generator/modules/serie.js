@@ -18,7 +18,8 @@ async function add_serie() {
                         'INSERT INTO series (name, `release`, end, duration, nb_saison, description, picture, awards) ' +
                         '   VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                         [body.Title, (body.Year === 'N/A') ? null : parseInt(body.Year, 10),
-                            (body.Year.split('–')[1] === '') ? null : parseInt(body.Year.split('–')[1], 10),
+                            (body.Year.split('–')[1] === '' || body.Year.split('-')[1] == null ) ?
+                                null : parseInt(body.Year.split('–')[1], 10),
                             (body.Runtime === 'N/A') ? null : parseInt(body.Runtime, 10),
                             parseInt(body.totalSeasons, 10),
                             (body.Plot === 'N/A') ? null : body.Plot,

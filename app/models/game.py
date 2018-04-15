@@ -2,14 +2,14 @@ import app.models.database as _database
 from flask import flash
 
 
-def get_top_rated_movies(nombre, page=0):
+def get_top_rated_games(nombre, page=0):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name, ROUND(AVG(rate), 1) AS moyenne, picture, release_year, description \
-					  FROM evaluate_movie \
-					    JOIN movies m ON evaluate_movie.movies_id = m.id \
+					  FROM evaluate_game \
+					    JOIN games m ON evaluate_game.games_id = m.id \
 					      GROUP BY id \
 					        ORDER BY moyenne DESC \
 					          LIMIT %s, %s;"
@@ -25,14 +25,14 @@ def get_top_rated_movies(nombre, page=0):
 	return result
 
 
-def get_most_commented_movies(nombre, page=0):
+def get_most_commented_games(nombre, page=0):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name, picture, release_year, description \
-					  FROM evaluate_movie \
-					    JOIN movies m ON evaluate_movie.movies_id = m.id \
+					  FROM evaluate_game \
+					    JOIN games m ON evaluate_game.games_id = m.id \
 					      WHERE comment IS NOT NULL \
 					        GROUP BY id \
 					          ORDER BY COUNT(*) DESC \
@@ -50,14 +50,14 @@ def get_most_commented_movies(nombre, page=0):
 	return result
 
 
-def get_most_interested_movies(nombre, page=0):
+def get_most_interested_games(nombre, page=0):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name, picture, COUNT(*) AS nombre, release_year, description \
-					  FROM movies \
-					    JOIN wish_list_movies wlm ON movies.id = wlm.movies_id \
+					  FROM games \
+					    JOIN wish_list_games wlm ON games.id = wlm.games_id \
 					      GROUP BY id \
 					        ORDER BY COUNT(*) DESC \
 					          LIMIT %s, %s;"
@@ -73,16 +73,16 @@ def get_most_interested_movies(nombre, page=0):
 	return result
 
 
-def show_movie(id):
+def show_game(id):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT *, avg(rate) AS moyenne \
-					  FROM movies \
-					     LEFT JOIN evaluate_movie em ON movies.id = em.movies_id \
+					  FROM games \
+					     LEFT JOIN evaluate_game em ON games.id = em.games_id \
 					      WHERE id = %s \
-					        GROUP BY movies_id;"
+					        GROUP BY games_id;"
 			cursor.execute(sql, id)
 			result = cursor.fetchone()
 	except Exception as e:
@@ -102,8 +102,8 @@ def get_countries(id):
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name \
 					  FROM countries \
-					    JOIN country_movie cm ON countries.id = cm.countries_id \
-					      WHERE movies_id = %s;"
+					    JOIN country_game cm ON countries.id = cm.countries_id \
+					      WHERE games_id = %s;"
 			cursor.execute(sql, id)
 			result = cursor.fetchall()
 	except Exception as e:
@@ -122,8 +122,8 @@ def get_genres(id):
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name \
 					  FROM genres \
-					    JOIN genre_movie gm ON genres.id = gm.genres_id \
-					      WHERE movies_id = %s;"
+					    JOIN genre_game gm ON genres.id = gm.genres_id \
+					      WHERE games_id = %s;"
 			cursor.execute(sql, id)
 			result = cursor.fetchall()
 	except Exception as e:
@@ -141,10 +141,10 @@ def get_casting(id):
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT characters_id as id, fullname, name AS role, picture \
-					  FROM character_movie \
-					    JOIN characters c ON character_movie.characters_id = c.id \
-					    JOIN roles r ON character_movie.roles_id = r.id \
-					      WHERE movies_id = %s;"
+					  FROM character_game \
+					    JOIN characters c ON character_game.characters_id = c.id \
+					    JOIN roles r ON character_game.roles_id = r.id \
+					      WHERE games_id = %s;"
 			cursor.execute(sql, id)
 			result = cursor.fetchall()
 	except Exception as e:
@@ -162,10 +162,10 @@ def get_reviews(id):
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT u.id AS id, username, comment \
-					  FROM evaluate_movie \
-					    JOIN movies m ON evaluate_movie.movies_id = m.id \
-					    JOIN users u ON evaluate_movie.users_id = u.id \
-					      WHERE movies_id = %s;"
+					  FROM evaluate_game \
+					    JOIN games m ON evaluate_game.games_id = m.id \
+					    JOIN users u ON evaluate_game.users_id = u.id \
+					      WHERE games_id = %s;"
 			cursor.execute(sql, id)
 			result = cursor.fetchall()
 	except Exception as e:
@@ -183,8 +183,8 @@ def get_user_review(id, user_id):
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT comment, rate \
-  					  FROM evaluate_movie \
-    					WHERE users_id = %s AND movies_id = %s;"
+  					  FROM evaluate_game \
+    					WHERE users_id = %s AND games_id = %s;"
 			cursor.execute(sql, (user_id, id))
 			result = cursor.fetchone()
 	except Exception as e:
@@ -196,12 +196,12 @@ def get_user_review(id, user_id):
 	return result
 
 
-def rate_movie(id, user_id, rate):
+def rate_game(id, user_id, rate):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = " INSERT INTO evaluate_movie (`users_id`, `movies_id`, `comment`, `rate`) VALUE (%s, %s, NULL, %s) \
+			sql = " INSERT INTO evaluate_game (`users_id`, `games_id`, `comment`, `rate`) VALUE (%s, %s, NULL, %s) \
 			        ON DUPLICATE KEY UPDATE `rate` = %s;"
 			cursor.execute(sql, (user_id, id, rate, rate))
 			cursor.fetchone()
@@ -215,12 +215,12 @@ def rate_movie(id, user_id, rate):
 	return result
 
 
-def comment_movie(id, user_id, comment):
+def comment_game(id, user_id, comment):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "INSERT INTO evaluate_movie (`users_id`, `movies_id`, `comment`, `rate`) VALUE (%s, %s, %s, NULL) \
+			sql = "INSERT INTO evaluate_game (`users_id`, `games_id`, `comment`, `rate`) VALUE (%s, %s, %s, NULL) \
 			       ON DUPLICATE KEY UPDATE `comment` = %s;"
 			
 			cursor.execute(sql, (user_id, id, comment, comment))
@@ -236,15 +236,15 @@ def comment_movie(id, user_id, comment):
 	return result
 
 
-def get_user_wishlist(movie_id, user_id):
+def get_user_wishlist(game_id, user_id):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
 			sql = "SELECT COUNT(*) AS total \
-  						FROM wish_list_movies \
-    						WHERE users_id = %s AND movies_id = %s;"
-			cursor.execute(sql, (user_id, movie_id))
+  						FROM wish_list_games \
+    						WHERE users_id = %s AND games_id = %s;"
+			cursor.execute(sql, (user_id, game_id))
 			row = cursor.fetchone()
 			if row['total'] == 1:
 				result = True
@@ -260,23 +260,23 @@ def get_user_wishlist(movie_id, user_id):
 	return result
 
 
-def wishlist_movie(movie_id, user_id):
+def wishlist_game(game_id, user_id):
 	conn = _database.connection()
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "INSERT INTO wish_list_movies (users_id, movies_id) VALUES (%s, %s)"
-			cursor.execute(sql, (user_id, movie_id))
+			sql = "INSERT INTO wish_list_games (users_id, games_id) VALUES (%s, %s)"
+			cursor.execute(sql, (user_id, game_id))
 			cursor.close()
-			flash('This movie have been added to your wishlist', 'success')
+			flash('This game have been added to your wishlist', 'success')
 	
 	except Exception as e:
 		try:
 			with conn.cursor() as cursor:
-				sql = "DELETE FROM wish_list_movies WHERE users_id = %s AND movies_id = %s;"
-				cursor.execute(sql, (user_id, movie_id))
+				sql = "DELETE FROM wish_list_games WHERE users_id = %s AND games_id = %s;"
+				cursor.execute(sql, (user_id, game_id))
 				cursor.close()
-				flash('This movie have been removed from your wishlist', 'success')
+				flash('This game have been removed from your wishlist', 'success')
 		except Exception:
 			flash('The database is unavailable', 'error')
 	
@@ -284,13 +284,13 @@ def wishlist_movie(movie_id, user_id):
 		conn.close()
 
 
-def get_total_movie_number():
+def get_total_game_number():
 	conn = _database.connection()
 	result = 0
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT COUNT(*) AS total FROM movies"
+			sql = "SELECT COUNT(*) AS total FROM games"
 			cursor.execute(sql)
 			result = cursor.fetchone()['total']
 			cursor.close()
@@ -311,8 +311,8 @@ def get_all_rates(id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, rate, picture, release_year, 'movie' AS type FROM evaluate_movie \
-					JOIN movies m ON evaluate_movie.movies_id = m.id WHERE users_id = %s AND rate IS NOT NULL \
+			sql = "SELECT id, name, rate, picture, release_year, 'game' AS type FROM evaluate_game \
+					JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND rate IS NOT NULL \
 				   UNION SELECT id, name, rate, picture, release_year, 'game' AS type FROM evaluate_game \
 				    JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND rate IS NOT NULL \
 				   UNION SELECT id, name, rate, picture, `release`, 'serie' AS type FROM evaluate_serie \
@@ -336,8 +336,8 @@ def get_all_comment(id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, comment, picture, release_year, 'movie' AS type FROM evaluate_movie \
-					JOIN movies m ON evaluate_movie.movies_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != '' \
+			sql = "SELECT id, name, comment, picture, release_year, 'game' AS type FROM evaluate_game \
+					JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != '' \
 				   UNION SELECT id, name, comment, picture, release_year, 'game' AS type FROM evaluate_game \
 				    JOIN games m ON evaluate_game.games_id = m.id WHERE users_id = %s AND comment IS NOT NULL AND comment != '' \
 				   UNION SELECT id, name, comment, picture, `release`, 'serie' AS type FROM evaluate_serie \
@@ -361,8 +361,8 @@ def get_all_wishlisted(id):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, release_year, 'movie' AS type, picture FROM wish_list_movies \
-					JOIN movies m ON wish_list_movies.movies_id = m.id WHERE users_id = %s \
+			sql = "SELECT id, name, release_year, 'game' AS type, picture FROM wish_list_games \
+					JOIN games m ON wish_list_games.games_id = m.id WHERE users_id = %s \
 				   UNION SELECT id, name, `release`, 'serie' AS type, picture FROM wish_list_series \
 				   JOIN series s ON wish_list_series.series_id = s.id WHERE users_id = %s \
 				   UNION SELECT id, name, release_year, 'game' AS type, picture FROM wish_list_games \
@@ -380,14 +380,14 @@ def get_all_wishlisted(id):
 	return result
 
 
-def delete_comment(movie_id, user_id):
+def delete_comment(game_id, user_id):
 	conn = _database.connection()
 	result = 0
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "UPDATE evaluate_movie SET comment = NULL WHERE movies_id = %s AND users_id = %s;"
-			cursor.execute(sql, (movie_id, user_id))
+			sql = "UPDATE evaluate_game SET comment = NULL WHERE games_id = %s AND users_id = %s;"
+			cursor.execute(sql, (game_id, user_id))
 			result = cursor.fetchall()
 			cursor.close()
 	
@@ -400,14 +400,14 @@ def delete_comment(movie_id, user_id):
 	return result
 
 
-def delete_rate(movie_id, user_id):
+def delete_rate(game_id, user_id):
 	conn = _database.connection()
 	result = 0
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "UPDATE evaluate_movie SET rate = NULL WHERE movies_id = %s AND users_id = %s;"
-			cursor.execute(sql, (movie_id, user_id))
+			sql = "UPDATE evaluate_game SET rate = NULL WHERE games_id = %s AND users_id = %s;"
+			cursor.execute(sql, (game_id, user_id))
 			result = cursor.fetchall()
 			cursor.close()
 	
