@@ -7,9 +7,9 @@ def get_top_rated_movies(nombre, page=0):
 	
 	try:
 		with conn.cursor() as cursor:
-			sql = "SELECT id, name, ROUND(AVG(rate), 1) AS moyenne, picture, release_year, description \
-					  FROM evaluate_movie \
-					    JOIN movies m ON evaluate_movie.movies_id = m.id \
+			sql = "SELECT id, name, picture, release_year, description, ROUND(AVG(rate), 1) AS moyenne \
+					  FROM movies \
+					    LEFT JOIN evaluate_movie m ON m.movies_id = movies.id \
 					      GROUP BY id \
 					        ORDER BY moyenne DESC \
 					          LIMIT %s, %s;"
@@ -32,7 +32,7 @@ def get_most_commented_movies(nombre, page=0):
 		with conn.cursor() as cursor:
 			sql = "SELECT id, name, picture, release_year, description \
 					  FROM evaluate_movie \
-					    JOIN movies m ON evaluate_movie.movies_id = m.id \
+					    RIGHT JOIN movies m ON evaluate_movie.movies_id = m.id \
 					      WHERE comment IS NOT NULL \
 					        GROUP BY id \
 					          ORDER BY COUNT(*) DESC \
