@@ -12,17 +12,24 @@ def index():
 	                       most_interested=game_model.get_most_interested_games(6))
 
 
-@game.route('/<identifiant>', methods=['GET'])
-def show(identifiant):
+@game.route('/<identifiant>', methods=['GET'], defaults={'page': 0})
+@game.route('/<identifiant>/<page>', methods=['GET'])
+def show(identifiant, page):
 	item = game_model.show_game(identifiant)
 	if item is None:
 		return redirect(request.referrer or '/')
+	tab = []
+	for i in range(0, round(game_model.get_nb_comments(identifiant) / 20)):
+		tab.append(i)
+	
 	return render_template('game/show.html',
 	                       item=item,
+	                       page=page,
+	                       tab=tab,
 	                       countries=game_model.get_countries(identifiant),
 	                       user_review=game_model.get_user_review(identifiant,
 	                                                               session['id']) if 'id' in session else (),
-	                       reviews=game_model.get_reviews(identifiant),
+	                       reviews=game_model.get_reviews(identifiant, 20, page),
 	                       genres=game_model.get_genres(identifiant),
 	                       wishlist=game_model.get_user_wishlist(identifiant,
 	                                                              session['id']) if 'id' in session else ())

@@ -145,3 +145,47 @@ img {
     width: 150px !important;
     height: auto !important;
 }
+
+.margin-top{
+    margin-top: 60px;
+}
+
+.margin-bottom{
+    margin-bottom: 60px;
+}
+
+.home-picture {
+    max-width: 140% !important;
+    height: 130px !important;
+    box-shadow: 0 1px 5px -1px rgba(0, 0, 0, 0.75);
+}
+
+.section {
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.section-connection{
+    background-color: #1f2022;
+    color: white;
+    text-align: center;
+    position: relative;
+
+}
+
+.section-connection p{
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.section-connection p .title{
+    font-size: 30px;
+    /*font-weight: bold;*/
+}
+
+.icon {
+    color: lawngreen;
+    margin-bottom: 10px;
+}

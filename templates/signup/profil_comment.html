@@ -23,7 +23,9 @@
         <div class="row display-poster">
             <div class="col-lg-2 col-md-2">
                 <div class="image-container">
-                    <img src="{{ comment.picture }}">
+                    <a href="{{ url_for('%s.show' % comment.type, identifiant=comment.id) }}">
+                        <img src="{{ comment.picture }}">
+                    </a>
                 </div>
             </div>
             <div class="col-lg-10 col-md-10">

@@ -22,7 +22,9 @@
         <div class="row display-poster">
             <div class="col-lg-2 col-md-2">
                 <div class="image-container">
-                    <img src="{{ rate.picture }}">
+                    <a href="{{ url_for('%s.show' % rate.type, identifiant=rate.id) }}">
+                        <img src="{{ rate.picture }}">
+                    </a>
                 </div>
             </div>
             <div class="col-lg-10 col-md-10">

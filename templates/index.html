@@ -1,7 +1,64 @@
 {% extends "layout/home.html" %}
 
 {% block content %}
+    {% if 'id' not in session %}
+        <div class="section section-connection">
+            <p>
+                <span class="title">Join the experience <br> and share your reviews</span> <br><br>
+                <a class="btn btn-lg btn-primary " href="{{ url_for('signup.login') }}">Login</a> or
+                <a class="btn btn-lg btn-secondary " href="{{ url_for('signup.register_form') }}">Register</a>
+            </p>
+        </div>
+    {% else %}
+        <br>
+    {% endif %}
+    <br>
+    <div class="d-none d-lg-block">
+        <div class="row">
+            {% for item in random %}
+                <a href="{{ url_for('%s.show' % item.type, identifiant=item.id) }}" class="col-lg-1">
+                    <img src="{{ item.picture }}" class="home-picture {{ 'margin-top' if loop.index % 2}} ">
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="margin-top margin-bottom">
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <i class="far fa-2x fa-bookmark icon"></i>
+                <h3>Discover</h3>
+                <p>
+                    Discover movies, series and video games based on the reviews of other users
+                </p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="far fa-2x fa-star icon"></i>
+                <h3>Mark</h3>
+                <p>
+                    Rate your best experiences and share them with your friends
+                </p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="far fa-2x fa-comments icon"></i>
+                <h3>Comments</h3>
+                <p>
+                    Discover the reviews of other users and give your opinion
+                </p>
+            </div>
+        </div>
+    </div>
+    <br>
 
-    <h1><b>Movies</b></h1>
+    <h3><i class="fa fa-sm fa-star"></i> Latest reviews</h3>
+    {% for review in last_review %}
+        <hr>
+        <p>
+            <a href="{{ url_for('signup.profil', id=review.users_id) }}"><i class="far fa-user"></i> {{ review.username }}</a> added the rate of <b>{{ review.rate }}/10</b>
+            on the {{ review.type }} "<a href="{{ url_for('%s.show' % review.type, identifiant=review.id) }}">{{ review.name }}</a>"
+
+        </p>
+    {% endfor %}
 
 {% endblock %}

@@ -12,17 +12,23 @@ def index():
 	                       most_interested=movie_model.get_most_interested_movies(6))
 
 
-@movie.route('/<identifiant>', methods=['GET'])
-def show(identifiant):
+@movie.route('/<identifiant>', methods=['GET'], defaults={'page': 0})
+@movie.route('/<identifiant>/<page>', methods=['GET'])
+def show(identifiant, page):
 	item = movie_model.show_movie(identifiant)
 	if item is None:
 		return redirect(request.referrer or '/')
+	tab = []
+	for i in range(0, round(movie_model.get_nb_comments(identifiant) / 20)):
+		tab.append(i)
 	return render_template('movie/show.html',
 	                       item=item,
+	                       page=page,
+	                       tab=tab,
 	                       countries=movie_model.get_countries(identifiant),
 	                       casting=movie_model.get_casting(identifiant),
 	                       user_review=movie_model.get_user_review(identifiant, session['id']) if 'id' in session else (),
-	                       reviews=movie_model.get_reviews(identifiant),
+	                       reviews=movie_model.get_reviews(identifiant, 20, page),
 	                       genres=movie_model.get_genres(identifiant),
 	                       wishlist=movie_model.get_user_wishlist(identifiant, session['id']) if 'id' in session else ())
 

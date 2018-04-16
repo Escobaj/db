@@ -12,18 +12,24 @@ def index():
 	                       most_interested=serie_model.get_most_interested_series(6))
 
 
-@serie.route('/<identifiant>', methods=['GET'])
-def show(identifiant):
+@serie.route('/<identifiant>', methods=['GET'], defaults={'page': 0})
+@serie.route('/<identifiant>/<page>', methods=['GET'])
+def show(identifiant, page):
 	item = serie_model.show_serie(identifiant)
 	if item is None:
 		return redirect(request.referrer or '/')
+	tab = []
+	for i in range(0, round(serie_model.get_nb_comments(identifiant) / 20)):
+		tab.append(i)
 	return render_template('serie/show.html',
 	                       item=item,
+	                       page=page,
+	                       tab=tab,
 	                       countries=serie_model.get_countries(identifiant),
 	                       casting=serie_model.get_casting(identifiant),
 	                       user_review=serie_model.get_user_review(identifiant,
 	                                                               session['id']) if 'id' in session else (),
-	                       reviews=serie_model.get_reviews(identifiant),
+	                       reviews=serie_model.get_reviews(identifiant, 20, page),
 	                       genres=serie_model.get_genres(identifiant),
 	                       wishlist=serie_model.get_user_wishlist(identifiant,
 	                                                              session['id']) if 'id' in session else ())

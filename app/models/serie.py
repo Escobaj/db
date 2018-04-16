@@ -156,7 +156,7 @@ def get_casting(id):
 	return result
 
 
-def get_reviews(id):
+def get_reviews(id, nombre, page):
 	conn = _database.connection()
 	
 	try:
@@ -165,8 +165,8 @@ def get_reviews(id):
 					  FROM evaluate_serie \
 					    JOIN series m ON evaluate_serie.series_id = m.id \
 					    JOIN users u ON evaluate_serie.users_id = u.id \
-					      WHERE series_id = %s;"
-			cursor.execute(sql, id)
+					      WHERE series_id = %s LIMIT %s, %s;"
+			cursor.execute(sql, (id, int(page) * int(nombre), int(nombre)))
 			result = cursor.fetchall()
 	except Exception as e:
 		result = ()
@@ -409,6 +409,26 @@ def delete_rate(serie_id, user_id):
 			sql = "UPDATE evaluate_serie SET rate = NULL WHERE series_id = %s AND users_id = %s;"
 			cursor.execute(sql, (serie_id, user_id))
 			result = cursor.fetchall()
+			cursor.close()
+	
+	except Exception as e:
+		flash('The database is unavailable', 'error')
+	
+	finally:
+		conn.close()
+	
+	return result
+
+
+def get_nb_comments(identifiant):
+	conn = _database.connection()
+	result = 0
+	
+	try:
+		with conn.cursor() as cursor:
+			sql = "SELECT count(*) as total FROM evaluate_serie WHERE comment IS NOT NULL AND series_id = %s;"
+			cursor.execute(sql, identifiant)
+			result = cursor.fetchone()['total']
 			cursor.close()
 	
 	except Exception as e:

@@ -102,7 +102,7 @@ def register():
 		try:
 			user_model.create_user(request.form['username'], request.form['password'],
 			                       request.form['first_name'], request.form['last_name'], request.form['email'])
-			flash(u'User have been created', 'error')
+			flash(u'User have been created', 'success')
 			return redirect(url_for('signup.login'))
 		except MySQLError:
 			flash(u'Username or Email is already used', 'error')

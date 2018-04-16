@@ -21,8 +21,9 @@
             </div>
         </div>
         <div class="form-group">
-            <input type="Email" class="form-control" placeholder="Email" name="email"
-                   value="{{ request.form.get('email') or '' }}">
+            <input type="email" class="form-control" placeholder="Email" name="email"
+                   value="{{ request.form.get('email') or '' }}"
+                   pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" placeholder="Password" min="6" name="password"

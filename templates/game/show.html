@@ -22,7 +22,8 @@
                 {% if session['id'] %}
                     <span class="rating"></span>
                     <div class="button-set">
-                        <a href="{{ url_for('game.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
+                        <a href="{{ url_for('game.wishlist', id=item.id) }}"
+                           class="btn btn-outline-secondary {{ 'text-success' if wishlist }}" title="add to interest"><i
                                 class="fas fa-bookmark"></i> Wishlist</a>
                         <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
                            title="comment"><i class="fas fa-comments"></i> Review</a>
@@ -139,6 +140,26 @@
     {% if reviews %}
         <h3><i class="fas fa-comments"></i> Review</h3>
         <hr>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                    <a class="page-link"
+                       href="{{ url_for('game.show', page=(page | int - 1 if page | int - 1 >= 0 else 0), identifiant=item.id) }}"
+                       tabindex="-1">Previous</a>
+                </li>
+                {% for index in tab %}
+                    <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                                   href="{{ url_for('game.show', page=index, identifiant=item.id) }}">{{ index + 1 }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                    <a class="page-link"
+                       href="{{ url_for('game.show', page=(page | int + 1 if (page | int + 1) in tab else page), identifiant=item.id) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+
         {% for review in reviews %}
             {% if review.comment %}
                 <dl>
@@ -149,6 +170,25 @@
                 </dl>
             {% endif %}
         {% endfor %}
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                    <a class="page-link"
+                       href="{{ url_for('game.show', page=(page | int - 1 if page | int - 1 >= 0 else 0), identifiant=item.id) }}"
+                       tabindex="-1">Previous</a>
+                </li>
+                {% for index in tab %}
+                    <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                                   href="{{ url_for('game.show', page=index, identifiant=item.id) }}">{{ index + 1 }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                    <a class="page-link"
+                       href="{{ url_for('game.show', page=(page | int + 1 if (page | int + 1) in tab else page), identifiant=item.id) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
     {% endif %}
 
     <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
@@ -163,7 +203,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Review:</label>
-                        <textarea class="form-control" rows="3" name="review">{% if user_review.comment %}{{ user_review.comment }}{% endif %}</textarea>
+                        <textarea class="form-control" rows="3" name="review">{% if user_review.comment %}
+                            {{ user_review.comment }}{% endif %}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

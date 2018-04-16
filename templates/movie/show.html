@@ -22,7 +22,8 @@
                 {% if session['id'] %}
                     <span class="rating"></span>
                     <div class="button-set">
-                        <a href="{{ url_for('movie.wishlist', id=item.id) }}" class="btn btn-outline-secondary {{ 'text-success' if wishlist}}" title="add to interest"><i
+                        <a href="{{ url_for('movie.wishlist', id=item.id) }}"
+                           class="btn btn-outline-secondary {{ 'text-success' if wishlist }}" title="add to interest"><i
                                 class="fas fa-bookmark"></i> Wishlist</a>
                         <a href="#" class="btn btn-outline-secondary" data-toggle="modal" data-target="#review"
                            title="comment"><i class="fas fa-comments"></i> Review</a>
@@ -141,8 +142,8 @@
         <hr>
         <div class="row display-poster">
             {% for character in casting %}
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <a href="{{ url_for('character.show', identifiant=character.id) }}">
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <a href="{{ url_for('character.show', identifiant=character.id) }}">
                         <div class="image-container">
                             {% if character.picture %}
                                 <img class="portrait"
@@ -154,14 +155,32 @@
                             <div class="bottomed poste">{{ character.role }}</div>
                         </div>
                         <p>{{ character.fullname }}</p>
-                        </a>
-                    </div>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     {% endif %}
     {% if reviews %}
         <h3><i class="fas fa-comments"></i> Review</h3>
         <hr>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                    <a class="page-link"
+                       href="{{ url_for('movie.show', page=(page | int - 1 if page | int - 1 >= 0 else 0), identifiant=item.id) }}"
+                       tabindex="-1">Previous</a>
+                </li>
+                {% for index in tab %}
+                    <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                                   href="{{ url_for('movie.show', page=index, identifiant=item.id) }}">{{ index + 1 }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                    <a class="page-link"
+                       href="{{ url_for('movie.show', page=(page | int + 1 if (page | int + 1) in tab else page), identifiant=item.id) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
         {% for review in reviews %}
             {% if review.comment %}
                 <dl>
@@ -172,6 +191,24 @@
                 </dl>
             {% endif %}
         {% endfor %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ 'disabled' if  page | int - 1 < 0 }}">
+                    <a class="page-link"
+                       href="{{ url_for('movie.show', page=(page | int - 1 if page | int - 1 >= 0 else 0), identifiant=item.id) }}"
+                       tabindex="-1">Previous</a>
+                </li>
+                {% for index in tab %}
+                    <li class="page-item {{ 'active' if page | int == index }}"><a class="page-link"
+                                                                                   href="{{ url_for('movie.show', page=index, identifiant=item.id) }}">{{ index + 1 }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ 'disabled' if (page | int + 1) not in tab }}">
+                    <a class="page-link"
+                       href="{{ url_for('movie.show', page=(page | int + 1 if (page | int + 1) in tab else page), identifiant=item.id) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
     {% endif %}
 
     <div class="modal fade" id="review" tabindex="-1" role="dialog" aria-hidden="true">
@@ -186,7 +223,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Review:</label>
-                        <textarea class="form-control" rows="3" name="review">{% if user_review.comment %}{{ user_review.comment }}{% endif %}</textarea>
+                        <textarea class="form-control" rows="3" name="review">{% if user_review.comment %}
+                            {{ user_review.comment }}{% endif %}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
