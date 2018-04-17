@@ -15,7 +15,7 @@ vous trouverez dans ce depot :
 
 `mysql -u root -p db < dump.sql`
 
-3 - Mettre a jour les informations de connection
+3 - Mettre a jour les informations de connection dans le fichier `app/models/database.py`
 
 `pymysql.connect(host='localhost',
 	                       user='root',
