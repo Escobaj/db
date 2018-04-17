@@ -6,8 +6,8 @@ def connection():
 	                       user='root',
 	                       password='1234',
 	                       db='db',
-	                       cursorclass=pymysql.cursors.DictCursor,
-	                       autocommit=True)
+	                       cursorclass=pymysql.cursors.DictCursor,  # pour avoir le nom des champs
+	                       autocommit=True)  # permet d'ajouter apres un insert
 
 
 def deconnection(conn):

@@ -3,7 +3,7 @@ import app.models.character as actor_model
 
 character = Blueprint('character', __name__)
 
-
+# page de detail des acteurs
 @character.route('/<identifiant>', methods=['GET'])
 def show(identifiant):
 	return render_template('character/show.html',

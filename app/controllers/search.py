@@ -4,6 +4,7 @@ import app.models.search as search_model
 search = Blueprint('search', __name__)
 
 
+# page ajax pour retourner les 3 meilleurs resultats
 @search.route('/', methods=['GET'], defaults={'query': ''})
 @search.route('/<query>', methods=['GET'])
 def search_query(query):

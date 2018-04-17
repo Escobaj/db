@@ -1,6 +1,7 @@
 import app.models.database as _database
 
 
+# recupere les elements qui match avec la requete
 def search(query='', limit=3):
 	conn = _database.connection()
 	
@@ -16,6 +17,7 @@ def search(query='', limit=3):
 	return result
 
 
+# recupere un nombre d'element de facon random entre tous les elements
 def getRandomElements(nb):
 	conn = _database.connection()
 	
@@ -31,6 +33,7 @@ def getRandomElements(nb):
 	return result
 
 
+# recupere les derniers elements qui on été noté.
 def getLastReview(nb):
 	conn = _database.connection()
 	

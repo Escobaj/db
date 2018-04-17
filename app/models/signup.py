@@ -2,6 +2,7 @@ from flask import abort
 import app.models.database as _database
 
 
+# permet de savoir si un couple utilisateur / password existe
 def user_exist(username, password):
 	conn = _database.connection()
 	
@@ -17,6 +18,7 @@ def user_exist(username, password):
 	return result
 
 
+# cree un utilisateur
 def create_user(username, password, first_name, last_name, email):
 	conn = _database.connection()
 	
@@ -29,6 +31,7 @@ def create_user(username, password, first_name, last_name, email):
 	return result
 
 
+# recupere les informations d'un utilisateur
 def get_user(id):
 	conn = _database.connection()
 	
@@ -40,5 +43,5 @@ def get_user(id):
 			conn.close()
 	except:
 		abort(404)
-		
+	
 	return result

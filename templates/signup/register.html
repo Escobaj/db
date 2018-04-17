@@ -8,16 +8,16 @@
 
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Username" name="username"
-                   value="{{ request.form.get('username') or '' }}">
+                   value="{{ request.form.get('username') or '' }}" required>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <input type="text" class="form-control" placeholder="First name" name="first_name"
-                       value="{{ request.form.get('first_name') or '' }}">
+                       value="{{ request.form.get('first_name') or '' }}" required>
             </div>
             <div class="form-group col-md-6">
                 <input type="text" class="form-control" placeholder="Last name" name="last_name"
-                       value="{{ request.form.get('last_name') or '' }}">
+                       value="{{ request.form.get('last_name') or '' }}" required>
             </div>
         </div>
         <div class="form-group">
@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
             <input type="password" class="form-control" placeholder="Password" min="6" name="password"
-                   value="{{ request.form.get('password') or '' }}">
+                   value="{{ request.form.get('password') or '' }}" required>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>

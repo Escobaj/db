@@ -2,6 +2,7 @@ import app.models.database as _database
 from flask import flash
 
 
+# recupere un acteur en fonction de son id
 def get_character(id):
 	conn = _database.connection()
 	
@@ -21,6 +22,7 @@ def get_character(id):
 	return result
 
 
+# recupere tous les elements d'un acteur en fonction de son id
 def get_all_elements(id):
 	conn = _database.connection()
 	

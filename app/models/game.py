@@ -2,6 +2,7 @@ import app.models.database as _database
 from flask import flash
 
 
+# recupere les mieux noté avec un systeme de pagination
 def get_top_rated_games(nombre, page=0):
 	conn = _database.connection()
 	
@@ -25,6 +26,7 @@ def get_top_rated_games(nombre, page=0):
 	return result
 
 
+# recupere les plus commenté avec un systeme de pagination
 def get_most_commented_games(nombre, page=0):
 	conn = _database.connection()
 	
@@ -50,6 +52,7 @@ def get_most_commented_games(nombre, page=0):
 	return result
 
 
+# recupere les plus ajouté avec un systeme de pagination
 def get_most_interested_games(nombre, page=0):
 	conn = _database.connection()
 	
@@ -73,6 +76,7 @@ def get_most_interested_games(nombre, page=0):
 	return result
 
 
+# recupere tous les champs d'un jeu video
 def show_game(id):
 	conn = _database.connection()
 	
@@ -95,6 +99,7 @@ def show_game(id):
 	return result
 
 
+# recupere tous les pays d'un jeu video
 def get_countries(id):
 	conn = _database.connection()
 	
@@ -115,6 +120,7 @@ def get_countries(id):
 	return result
 
 
+# recupere tous les genres d'un jeu video
 def get_genres(id):
 	conn = _database.connection()
 	
@@ -135,6 +141,7 @@ def get_genres(id):
 	return result
 
 
+# recupere l'ensemble des acteurs en fonction d'un id
 def get_casting(id):
 	conn = _database.connection()
 	
@@ -156,6 +163,7 @@ def get_casting(id):
 	return result
 
 
+# recupere les commentaires d'un jeu video avec une pagination
 def get_reviews(id, nombre, page):
 	conn = _database.connection()
 	
@@ -177,6 +185,7 @@ def get_reviews(id, nombre, page):
 	return result
 
 
+# recupere la review de l'utilisateur connecté
 def get_user_review(id, user_id):
 	conn = _database.connection()
 	
@@ -196,6 +205,7 @@ def get_user_review(id, user_id):
 	return result
 
 
+# ajoute ou modifie une note
 def rate_game(id, user_id, rate):
 	conn = _database.connection()
 	
@@ -215,6 +225,7 @@ def rate_game(id, user_id, rate):
 	return result
 
 
+# ajoute ou modifie un commentaire
 def comment_game(id, user_id, comment):
 	conn = _database.connection()
 	
@@ -236,6 +247,7 @@ def comment_game(id, user_id, comment):
 	return result
 
 
+# detecte si un utilisateur a l'element dans sa wishlist
 def get_user_wishlist(game_id, user_id):
 	conn = _database.connection()
 	
@@ -260,6 +272,7 @@ def get_user_wishlist(game_id, user_id):
 	return result
 
 
+# ajoute ou supprime un element de la wishlist
 def wishlist_game(game_id, user_id):
 	conn = _database.connection()
 	
@@ -284,6 +297,7 @@ def wishlist_game(game_id, user_id):
 		conn.close()
 
 
+# recupere le nombre de jeu video
 def get_total_game_number():
 	conn = _database.connection()
 	result = 0
@@ -305,6 +319,7 @@ def get_total_game_number():
 	return result
 
 
+# recupere toutes les notes
 def get_all_rates(id):
 	conn = _database.connection()
 	result = 0
@@ -330,6 +345,7 @@ def get_all_rates(id):
 	return result
 
 
+# recupere tous les commentaires d'un jeu
 def get_all_comment(id):
 	conn = _database.connection()
 	result = 0
@@ -355,6 +371,7 @@ def get_all_comment(id):
 	return result
 
 
+# recupere tous les elements dans la wishlist
 def get_all_wishlisted(id):
 	conn = _database.connection()
 	result = 0
@@ -380,6 +397,7 @@ def get_all_wishlisted(id):
 	return result
 
 
+# supprime un commentaire
 def delete_comment(game_id, user_id):
 	conn = _database.connection()
 	result = 0
@@ -399,7 +417,7 @@ def delete_comment(game_id, user_id):
 	
 	return result
 
-
+# supprime une note
 def delete_rate(game_id, user_id):
 	conn = _database.connection()
 	result = 0
@@ -419,7 +437,7 @@ def delete_rate(game_id, user_id):
 	
 	return result
 
-
+# recupere le nombre de commentaire pour la pagination
 def get_nb_comments(identifiant):
 	conn = _database.connection()
 	result = 0

@@ -4,6 +4,7 @@ import app.models.movie as movie_model
 movie = Blueprint('movie', __name__)
 
 
+# page d'accueil des films
 @movie.route('/', methods=['GET'])
 def index():
 	return render_template('movie/index.html',
@@ -12,6 +13,7 @@ def index():
 	                       most_interested=movie_model.get_most_interested_movies(6))
 
 
+# page d'affichage d'un film avec la pagination
 @movie.route('/<identifiant>', methods=['GET'], defaults={'page': 0})
 @movie.route('/<identifiant>/<page>', methods=['GET'])
 def show(identifiant, page):
@@ -27,18 +29,22 @@ def show(identifiant, page):
 	                       tab=tab,
 	                       countries=movie_model.get_countries(identifiant),
 	                       casting=movie_model.get_casting(identifiant),
-	                       user_review=movie_model.get_user_review(identifiant, session['id']) if 'id' in session else (),
+	                       user_review=movie_model.get_user_review(identifiant,
+	                                                               session['id']) if 'id' in session else (),
 	                       reviews=movie_model.get_reviews(identifiant, 20, page),
 	                       genres=movie_model.get_genres(identifiant),
-	                       wishlist=movie_model.get_user_wishlist(identifiant, session['id']) if 'id' in session else ())
+	                       wishlist=movie_model.get_user_wishlist(identifiant,
+	                                                              session['id']) if 'id' in session else ())
 
 
+# ajax pour ajouter une note
 @movie.route('/<id>/review', methods=['POST'])
 def review(id):
 	test = movie_model.rate_movie(id, session['id'], request.form['rate'])
 	return jsonify(test)
 
 
+# page d'ajout d'un commentaire
 @movie.route('/<id>/comment', methods=['POST'])
 def comment(id):
 	if session['id'] is None or request.form['review'] is None:
@@ -50,6 +56,7 @@ def comment(id):
 	return redirect(request.referrer or '/')
 
 
+# page de suppression d'un commenataire
 @movie.route('/<id>/delete_comment', methods=['GET'])
 def delete_comment(id):
 	print(id)
@@ -59,6 +66,7 @@ def delete_comment(id):
 	return redirect(request.referrer or '/')
 
 
+# page de suppression d'une note
 @movie.route('/<id>/delete_rate', methods=['GET'])
 def delete_rate(id):
 	if session['id'] is None:
@@ -67,6 +75,7 @@ def delete_rate(id):
 	return redirect(request.referrer or '/')
 
 
+# page pour changer le status d'un element dans la wishlist
 @movie.route('/<id>/wishlist', methods=['GET'])
 def wishlist(id):
 	if session['id'] is None is None:
@@ -75,6 +84,7 @@ def wishlist(id):
 	return redirect(request.referrer or '/')
 
 
+# page des films les mieux notés
 @movie.route('/top_rate', methods=['GET'], defaults={'page': 0})
 @movie.route('/top_rate/<int:page>', methods=['GET'])
 def best_rate(page):
@@ -88,6 +98,7 @@ def best_rate(page):
 	                       page=page)
 
 
+# page des films les plus commentés
 @movie.route('/most_commented', methods=['GET'], defaults={'page': 0})
 @movie.route('/most_commented/<int:page>', methods=['GET'])
 def most_commented(page):
@@ -100,6 +111,7 @@ def most_commented(page):
 	                       page=page)
 
 
+# page des films les plus ajouter a la wishlist
 @movie.route('/most_wishlisted', methods=['GET'], defaults={'page': 0})
 @movie.route('/most_wishlisted/<int:page>', methods=['GET'])
 def most_wishlisted(page):

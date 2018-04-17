@@ -6,6 +6,7 @@ from pymysql import MySQLError
 signup = Blueprint('signup', __name__)
 
 
+# page de connexion
 @signup.route('/login', methods=['GET'])
 def login():
 	if 'username' in session:
@@ -15,6 +16,7 @@ def login():
 	return render_template('signup/login.html')
 
 
+# page de check de connexion
 @signup.route('/login', methods=['POST'])
 def connect():
 	user_exist = ()
@@ -42,6 +44,7 @@ def connect():
 			return render_template('signup/login.html')
 
 
+# page de deconnexion
 @signup.route('/logout', methods=['GET'])
 def logout():
 	session.pop('username')
@@ -50,6 +53,7 @@ def logout():
 	return redirect(request.referrer or '/')
 
 
+# page de profil, onglet note
 @signup.route('/profil/<int:id>', methods=['GET'])
 def profil(id):
 	
@@ -64,6 +68,7 @@ def profil(id):
 	                       id=id)
 
 
+# page de profil, onglet commentaire
 @signup.route('/profil/<int:id>/comment', methods=['GET'])
 def comment(id):
 	if 'id' in session and session['id'] == id:
@@ -77,6 +82,7 @@ def comment(id):
 	                       id=id)
 
 
+# page de profil, onglet preference
 @signup.route('/profil/<int:id>/wishlist', methods=['GET'])
 def wishlist(id):
 	if 'id' in session and session['id'] == id:
@@ -90,11 +96,13 @@ def wishlist(id):
 	                       id=id)
 
 
+# page de formulaire d'inscription
 @signup.route('/register', methods=['GET'])
 def register_form():
 	return render_template('signup/register.html')
 
 
+# page de soumission du formulaire d'inscription
 @signup.route('/register', methods=['POST'])
 def register():
 	if (request.form['username'].strip() != '' or request.form['password'].strip() != '' or request.form[

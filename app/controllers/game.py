@@ -4,6 +4,7 @@ import app.models.game as game_model
 game = Blueprint('game', __name__)
 
 
+# page d'acceuil des jeux video
 @game.route('/', methods=['GET'])
 def index():
 	return render_template('game/index.html',
@@ -12,6 +13,7 @@ def index():
 	                       most_interested=game_model.get_most_interested_games(6))
 
 
+# page d'affichage d'un jeu video en fonction de la pagination
 @game.route('/<identifiant>', methods=['GET'], defaults={'page': 0})
 @game.route('/<identifiant>/<page>', methods=['GET'])
 def show(identifiant, page):
@@ -28,19 +30,21 @@ def show(identifiant, page):
 	                       tab=tab,
 	                       countries=game_model.get_countries(identifiant),
 	                       user_review=game_model.get_user_review(identifiant,
-	                                                               session['id']) if 'id' in session else (),
+	                                                              session['id']) if 'id' in session else (),
 	                       reviews=game_model.get_reviews(identifiant, 20, page),
 	                       genres=game_model.get_genres(identifiant),
 	                       wishlist=game_model.get_user_wishlist(identifiant,
-	                                                              session['id']) if 'id' in session else ())
+	                                                             session['id']) if 'id' in session else ())
 
 
+# page pour ajouter une note en ajax
 @game.route('/<id>/review', methods=['POST'])
 def review(id):
 	test = game_model.rate_game(id, session['id'], request.form['rate'])
 	return jsonify(test)
 
 
+# page pour ajouter un commentaire
 @game.route('/<id>/comment', methods=['POST'])
 def comment(id):
 	if session['id'] is None or request.form['review'] is None:
@@ -52,6 +56,7 @@ def comment(id):
 	return redirect(request.referrer or '/')
 
 
+# page de suppression d'un commentaire
 @game.route('/<id>/delete_comment', methods=['GET'])
 def delete_comment(id):
 	print(id)
@@ -61,6 +66,7 @@ def delete_comment(id):
 	return redirect(request.referrer or '/')
 
 
+# page de suppression d'une note
 @game.route('/<id>/delete_rate', methods=['GET'])
 def delete_rate(id):
 	if session['id'] is None:
@@ -69,6 +75,7 @@ def delete_rate(id):
 	return redirect(request.referrer or '/')
 
 
+# page d'ajout et de suppression a une wishlist
 @game.route('/<id>/wishlist', methods=['GET'])
 def wishlist(id):
 	if session['id'] is None is None:
@@ -77,6 +84,7 @@ def wishlist(id):
 	return redirect(request.referrer or '/')
 
 
+# page des jeux video meilleurs notes
 @game.route('/top_rate', methods=['GET'], defaults={'page': 0})
 @game.route('/top_rate/<int:page>', methods=['GET'])
 def best_rate(page):
@@ -90,6 +98,7 @@ def best_rate(page):
 	                       page=page)
 
 
+# page des jeux video plus plus commenté
 @game.route('/most_commented', methods=['GET'], defaults={'page': 0})
 @game.route('/most_commented/<int:page>', methods=['GET'])
 def most_commented(page):
@@ -102,6 +111,7 @@ def most_commented(page):
 	                       page=page)
 
 
+# page des jeux video les plus ajouter a la liste de souhait
 @game.route('/most_wishlisted', methods=['GET'], defaults={'page': 0})
 @game.route('/most_wishlisted/<int:page>', methods=['GET'])
 def most_wishlisted(page):
